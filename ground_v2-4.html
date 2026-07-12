@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Notice</title>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Karla:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Karla:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+<style>
+  :root{
+    --bg: #E1E6EA;
+    --bg-raised: #ECF0F2;
+    --ink: #1F2B33;
+    --ink-soft: #5A6C76;
+    --sage: #567A8C;
+    --sage-deep: #35505E;
+    --grass: #6B8072;
+    --slate: #7E93A0;
+    --neutral: #C7CED2;
+    --brick: #8C4A40;
+    --line: #CBD3D7;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Karla',-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased; padding-bottom:64px;
+  }
+  h1,h2,h3{ font-family:'Fraunces',Georgia,serif; font-weight:500; margin:0 0 4px; }
+  .mono{ font-family:'IBM Plex Mono',monospace; }
+  .app{ max-width:480px; margin:0 auto; min-height:100vh; position:relative; }
+  .screen{ padding:26px 20px 40px; animation:fade .3s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+
+  .eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--sage-deep); margin-bottom:8px; }
+  p.lede{ color:var(--ink-soft); line-height:1.55; margin:6px 0 20px; font-size:14.5px;}
+
+  .card{ background:var(--bg-raised); border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:12px; }
+  .notice-card{ background:var(--bg-raised); border:1px solid var(--line); border-left:3px solid var(--sage); border-radius:10px; padding:14px 16px; margin-bottom:14px; font-size:13px; color:var(--ink-soft); line-height:1.5; }
+  .notice-card b{ color:var(--ink); }
+
+  button.primary{
+    width:100%; padding:16px; border:none; border-radius:14px;
+    background:var(--sage-deep); color:#F3F5EF; font-family:'Karla',sans-serif;
+    font-weight:700; font-size:16px; cursor:pointer;
+  }
+  button.primary:active{ background:var(--sage); }
+  button.ghost{
+    width:100%; padding:12px; border:1px solid var(--line); border-radius:12px;
+    background:transparent; color:var(--ink); font-family:'Karla',sans-serif; font-size:14px; cursor:pointer; margin-top:8px;
+  }
+  button.back{ background:none; border:none; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; font-size:12px; cursor:pointer; padding:6px 0 16px; }
+  button.icon-btn{ background:none; border:none; font-size:22px; cursor:pointer; padding:4px; }
+
+  .topbar{ display:flex; justify-content:space-between; align-items:center; padding:16px 20px 0; }
+
+  .face-row{ display:flex; justify-content:space-between; gap:6px; margin:18px 0; }
+  .face-btn{
+    flex:1; aspect-ratio:1; border-radius:16px; border:1px solid var(--line); background:var(--bg-raised);
+    font-size:28px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .face-btn:active{ background:var(--sage); transform:scale(.95); }
+  .face-btn.active{ background:var(--sage-deep); border-color:var(--sage-deep); transform:scale(1.05); }
+
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+  .chip{ padding:8px 14px; border-radius:999px; border:1px solid var(--line); background:#fff; font-size:13px; cursor:pointer; color:var(--ink-soft); }
+  .chip.active{ background:var(--sage-deep); color:#fff; border-color:var(--sage-deep); }
+
+  .count-row{ display:flex; gap:14px; justify-content:center; margin:20px 0; }
+  .count-circle{
+    width:78px; height:78px; border-radius:50%; border:2px solid var(--line); background:var(--bg-raised);
+    display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-size:26px;
+    cursor:pointer; color:var(--ink-soft);
+  }
+  .count-circle.active{ border-color:var(--sage-deep); background:var(--sage-deep); color:#fff; }
+
+  .prompt-hero{ text-align:center; padding:38px 18px; background:var(--sage-deep); color:#F3F5EF; border-radius:18px; margin-bottom:16px; }
+  .prompt-hero .count{ font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.1em; opacity:.8; text-transform:uppercase;}
+  .prompt-hero h2{ color:#F3F5EF; font-size:25px; margin-top:8px; }
+
+  .capture-zone{ border:2px dashed var(--line); border-radius:14px; padding:30px; text-align:center; background:var(--bg-raised); cursor:pointer; margin-bottom:16px; }
+  .capture-zone span{ display:block; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); margin-top:8px;}
+
+  .live-cam{ position:relative; border-radius:14px; overflow:hidden; background:#000; margin-bottom:16px; }
+  .live-cam video{ width:100%; display:block; aspect-ratio:3/4; object-fit:cover; }
+  .shutter{
+    position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+    width:62px; height:62px; border-radius:50%; background:#fff; border:4px solid var(--sage-deep);
+    cursor:pointer; padding:0;
+  }
+
+  .grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
+  .tile{ aspect-ratio:1; border-radius:10px; overflow:hidden; background:var(--neutral); border:1px solid var(--line); animation:drop .3s ease; }
+  .tile img{ width:100%; height:100%; object-fit:cover; display:block; }
+  @keyframes drop{ from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:none;} }
+
+  textarea{ width:100%; padding:14px; border-radius:12px; border:1px solid var(--line); font-family:'Karla',sans-serif; font-size:15px; margin-bottom:14px; background:#fff; resize:vertical; }
+
+  .mood-compare{ display:flex; align-items:center; justify-content:center; gap:18px; margin:24px 0; }
+  .mood-compare .face{ font-size:44px; }
+  .mood-compare .arrow{ font-size:22px; color:var(--ink-soft); }
+
+  /* Otter + grass, pure CSS/emoji, no network dependency */
+  .otter-scene{ position:relative; height:110px; margin:10px 0 18px; overflow:hidden; }
+  .grass{
+    position:absolute; bottom:0; left:0; right:0; height:26px;
+    background:var(--grass);
+    clip-path:polygon(0% 100%,0% 40%,4% 100%,8% 30%,12% 100%,16% 45%,20% 100%,24% 35%,28% 100%,32% 40%,36% 100%,40% 30%,44% 100%,48% 45%,52% 100%,56% 35%,60% 100%,64% 40%,68% 100%,72% 30%,76% 100%,80% 45%,84% 100%,88% 35%,92% 100%,96% 40%,100% 100%,100% 100%,0% 100%);
+  }
+  .otter{ position:absolute; left:50%; bottom:6px; font-size:46px; transform:translate(-50%, 60px); transition:transform .6s cubic-bezier(.2,.9,.3,1.2); }
+  .otter-scene.peek .otter{ transform:translate(-50%, 0px); }
+
+  .otter-scene.big{ height:170px; }
+  .otter-scene.big .grass{ height:36px; }
+  .otter-scene.big .otter{ font-size:88px; }
+
+  .splash-wrap{ min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .splash-wrap .otter-scene{ width:100%; height:180px; margin-bottom:8px; }
+  .splash-wrap .otter-scene .grass{ height:38px; }
+  .splash-wrap .otter-scene .otter{ font-size:84px; }
+  .wordmark{ font-family:'Fraunces',Georgia,serif; font-size:44px; letter-spacing:.04em; color:var(--sage-deep); margin:0; }
+  .wordmark-tagline{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-soft); margin-top:6px; }
+
+  .mini-wordmark{ text-align:center; font-family:'Fraunces',Georgia,serif; letter-spacing:.1em; color:var(--sage-deep); font-size:15px; margin-top:2px; }
+  .otter-scene.big + .mini-wordmark{ font-size:19px; }
+
+  .brand-row{ display:flex; align-items:center; gap:6px; font-family:'Fraunces',Georgia,serif; font-size:16px; letter-spacing:.05em; color:var(--sage-deep); margin-bottom:14px; }
+  .brand-row .ico{ font-size:19px; }
+
+  .crisis-row{ display:flex; gap:8px; }
+  .crisis-btn-row{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+    background:var(--brick); color:#fff; border:none; border-radius:12px; padding:12px 6px;
+    font-family:'Karla',sans-serif; font-weight:700; font-size:12px; text-decoration:none; text-align:center;
+  }
+  .crisis-btn-row .num{ font-family:'IBM Plex Mono',monospace; font-weight:400; font-size:10.5px; opacity:.9; }
+
+  .footer-crisis{
+    position:fixed; bottom:0; left:0; right:0; background:var(--brick);
+    display:flex; z-index:50; max-width:480px; margin:0 auto;
+  }
+  .footer-crisis a{
+    flex:1; color:#fff; text-decoration:none; text-align:center; padding:10px 4px;
+    font-family:'Karla',sans-serif; font-size:12px; font-weight:700; border-left:1px solid rgba(255,255,255,.25);
+    line-height:1.3;
+  }
+  .footer-crisis a:first-child{ border-left:none; }
+  .footer-crisis a .num{ display:block; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:400; opacity:.9; }
+
+  .crisis-block{ margin-bottom:18px; }
+  .crisis-btn{
+    display:flex; align-items:center; justify-content:space-between; width:100%;
+    background:var(--brick); color:#fff; border:none; border-radius:12px; padding:16px 18px;
+    font-family:'Karla',sans-serif; font-weight:700; font-size:15px; text-decoration:none; margin-bottom:8px;
+  }
+  .crisis-btn .num{ font-family:'IBM Plex Mono',monospace; font-weight:400; font-size:13px; opacity:.9; }
+
+  .storage-warn{ background:#F1DCC7; border:1px solid #D9B98C; color:#5C4423; border-radius:10px; padding:10px 14px; font-size:12.5px; margin-bottom:14px; }
+
+  .entry{ border-bottom:1px solid var(--line); padding:14px 0; }
+  .entry:last-child{ border-bottom:none; }
+  .entry-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; }
+  .entry-head .date{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft); }
+  .mini-grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:5px; margin:8px 0; }
+  .mini-grid img{ width:100%; aspect-ratio:1; object-fit:cover; border-radius:6px; }
+  .caption-text{ font-size:13.5px; color:var(--ink); line-height:1.5; font-style:italic; }
+  .empty{ text-align:center; padding:40px 20px; color:var(--ink-soft); font-size:14px; }
+  .share-btn-small{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--sage-deep); background:none; border:1px solid var(--sage-deep); border-radius:8px; padding:6px 10px; cursor:pointer; margin-top:8px; }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div class="footer-crisis" id="footerCrisis">
+  <a href="tel:14416">Tele MANAS<span class="num">14416</span></a>
+  <a href="tel:18005990019">KIRAN<span class="num">1800-599-0019</span></a>
+  <a href="tel:18602662345">Vandrevala<span class="num">1860-266-2345</span></a>
+</div>
+
+<script>
+/* ---------- storage layer: IndexedDB, with honest failure detection ---------- */
+const DB_NAME='groundapp_v2', STORE='sessions', SETTINGS='settings';
+let storageOK = true;
+
+function openDB(){
+  return new Promise((resolve,reject)=>{
+    if(!('indexedDB' in window)){ reject('no-indexeddb'); return; }
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = (e)=>{
+      const db = e.target.result;
+      if(!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE, {keyPath:'id'});
+      if(!db.objectStoreNames.contains(SETTINGS)) db.createObjectStore(SETTINGS, {keyPath:'key'});
+    };
+    req.onsuccess = ()=>resolve(req.result);
+    req.onerror = ()=>reject(req.error);
+  });
+}
+async function saveSession(session){
+  try{
+    const db = await openDB();
+    return new Promise((res,rej)=>{
+      const tx = db.transaction(STORE,'readwrite');
+      tx.objectStore(STORE).put(session);
+      tx.oncomplete = ()=>res(true);
+      tx.onerror = ()=>rej(tx.error);
+    });
+  }catch(e){ storageOK=false; return false; }
+}
+async function getAllSessions(){
+  try{
+    const db = await openDB();
+    return new Promise((res)=>{
+      const tx = db.transaction(STORE,'readonly');
+      const req = tx.objectStore(STORE).getAll();
+      req.onsuccess = ()=>res(req.result || []);
+      req.onerror = ()=>res([]);
+    });
+  }catch(e){ storageOK=false; return []; }
+}
+async function getSetting(key, fallback){
+  try{
+    const db = await openDB();
+    return new Promise((res)=>{
+      const tx = db.transaction(SETTINGS,'readonly');
+      const req = tx.objectStore(SETTINGS).get(key);
+      req.onsuccess = ()=>res(req.result ? req.result.value : fallback);
+      req.onerror = ()=>res(fallback);
+    });
+  }catch(e){ return fallback; }
+}
+async function setSetting(key, value){
+  try{
+    const db = await openDB();
+    return new Promise((res,rej)=>{
+      const tx = db.transaction(SETTINGS,'readwrite');
+      tx.objectStore(SETTINGS).put({key, value});
+      tx.oncomplete = ()=>res(true);
+      tx.onerror = ()=>rej(tx.error);
+    });
+  }catch(e){ return false; }
+}
+async function testStorage(){
+  const ok = await saveSession({id:'__test__', test:true});
+  if(ok){
+    try{ const db=await openDB(); const tx=db.transaction(STORE,'readwrite'); tx.objectStore(STORE).delete('__test__'); }catch(e){}
+  }
+  storageOK = !!ok;
+  return storageOK;
+}
+
+/* ---------- app state ---------- */
+const app = document.getElementById('app');
+const SENSES = [
+  {label:'something you can SEE', icon:'👁'},
+  {label:'something you can TOUCH', icon:'✋'},
+  {label:'something you can HEAR', icon:'👂'},
+  {label:'something you can SMELL', icon:'👃'},
+  {label:'something you can imagine TASTING', icon:'👅'}
+];
+const FACES = ['😖','🙁','😐','🙂','😄'];
+const FACE_LABELS = ['very heavy','heavy','okay','lighter','light'];
+
+let state = {
+  screen: 'splash',
+  itemCount: 5,
+  preMood: null, preTag: '',
+  postMood: null,
+  photos: [],
+  currentIdx: 0,
+  note: '',
+  todayCount: 0,
+  todayHeavyCount: 0,
+  lastSaveOk: true,
+  onboarded: false,
+  therapistName: '',
+  therapistPhone: ''
+};
+
+function go(screen){
+  if(state.screen === 'capture' && screen !== 'capture') stopStream();
+  state.screen = screen; render(); window.scrollTo(0,0);
+}
+
+let mediaStream = null;
+function stopStream(){
+  if(mediaStream){ mediaStream.getTracks().forEach(t=>t.stop()); mediaStream = null; }
+}
+
+async function boot(){
+  render(); // show splash immediately, before any async storage work
+  await testStorage();
+  state.itemCount = await getSetting('itemCount', 5);
+  state.onboarded = await getSetting('onboarded', false);
+  state.therapistName = await getSetting('therapistName', '');
+  state.therapistPhone = await getSetting('therapistPhone', '');
+  setTimeout(()=>{
+    go(state.onboarded ? 'home' : 'onboarding');
+  }, 1400);
+}
+
+function storageWarning(){
+  if(storageOK) return '';
+  return `<div class="storage-warn">⚠ This device/browser isn't letting the app save data right now (common when opening a downloaded file directly). Sessions won't be remembered after you close this. For reliable saving, host this file online or add it to your home screen instead of opening it from Downloads.</div>`;
+}
+
+function render(){
+  const isHome = state.screen === 'home';
+  const footer = document.getElementById('footerCrisis');
+  if(footer) footer.style.display = isHome ? 'none' : 'flex';
+  document.body.style.paddingBottom = isHome ? '20px' : '64px';
+  const r = {
+    splash: renderSplash,
+    onboarding: renderOnboarding,
+    home: renderHome,
+    pre_mood: renderPreMood,
+    capture: renderCapture,
+    post_mood: renderPostMood,
+    note: renderNote,
+    done: renderDone,
+    diary: renderDiary,
+    settings: renderSettings
+  }[state.screen];
+  if(r) r();
+}
+
+function renderSplash(){
+  app.innerHTML = `
+    <div class="splash-wrap">
+      <div class="otter-scene" id="splashOtter">
+        <div class="grass"></div>
+        <div class="otter">🦦</div>
+      </div>
+      <h1 class="wordmark">GROUND</h1>
+      <div class="wordmark-tagline">a noticing practice</div>
+    </div>`;
+  requestAnimationFrame(()=> document.getElementById('splashOtter').classList.add('peek'));
+}
+
+function renderOnboarding(){
+  app.innerHTML = `
+    <div class="screen">
+      <div class="eyebrow">Before you start</div>
+      <h1>A quick note</h1>
+      <div class="notice-card"><b>This is a coping tool, not treatment.</b> It's not a diagnosis, therapy, or a substitute for professional care.</div>
+      <div class="notice-card"><b>Talk to your psychologist about whether this fits you.</b> Grounding through a camera works well for many people, but not everyone — especially if looking at things through a screen ever makes you feel more distant, not less.</div>
+      <div class="notice-card"><b>Your photos stay on this device.</b> Nothing is uploaded automatically. Only you decide what to save or send, and to whom.</div>
+      <div class="notice-card"><b>If this is a crisis</b>, please use the helpline numbers pinned at the bottom of the screen instead of this exercise.</div>
+      <button class="primary" id="ok">I understand — let's begin</button>
+    </div>`;
+  document.getElementById('ok').onclick = async ()=>{
+    await setSetting('onboarded', true);
+    state.onboarded = true;
+    go('home');
+  };
+}
+
+function renderHome(){
+  app.innerHTML = `
+    <div class="screen">
+      <div class="topbar" style="padding:0 0 10px;">
+        <div class="brand-row" style="margin-bottom:0;"><span class="ico">🦦</span>GROUND</div>
+        <div>
+          <button class="icon-btn" id="diaryBtn" aria-label="Your diary">📔</button>
+          <button class="icon-btn" id="settingsBtn" aria-label="Settings">⚙️</button>
+        </div>
+      </div>
+      <div class="eyebrow">Notice</div>
+      <h1>Ground yourself</h1>
+      <p class="lede">Look around. Notice a few things. See how it feels before and after.</p>
+      ${storageWarning()}
+      <button class="primary" id="start">Start noticing</button>
+      <p style="text-align:center;font-size:12px;color:var(--ink-soft);margin:16px 0 26px;">Your photos stay on this device — only you decide who to send them to.</p>
+      <div class="crisis-block">
+        <div class="eyebrow" style="color:var(--brick);">If this feels urgent</div>
+        <div class="crisis-row">
+          <a class="crisis-btn-row" href="tel:14416"><span>Tele MANAS</span><span class="num">14416</span></a>
+          <a class="crisis-btn-row" href="tel:18005990019"><span>KIRAN</span><span class="num">1800-599-0019</span></a>
+          <a class="crisis-btn-row" href="tel:18602662345"><span>Vandrevala</span><span class="num">1860-266-2345</span></a>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('start').onclick = ()=>{
+    state.preMood=null; state.preTag=''; state.postMood=null; state.photos=[]; state.currentIdx=0; state.note='';
+    go('pre_mood');
+  };
+  document.getElementById('diaryBtn').onclick = ()=>go('diary');
+  document.getElementById('settingsBtn').onclick = ()=>go('settings');
+}
+
+function renderPreMood(){
+  app.innerHTML = `
+    <div class="screen">
+      <button class="back" id="b">← back</button>
+      <div class="eyebrow">Right now</div>
+      <h1>How does this feel?</h1>
+      <p class="lede">Tap the face closest to it.</p>
+      <div class="face-row" id="faces">
+        ${FACES.map((f,i)=>`<button class="face-btn" data-i="${i}">${f}</button>`).join('')}
+      </div>
+      <label style="display:block;font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);text-transform:uppercase;margin-bottom:8px;">Optional — what's it feel like?</label>
+      <div class="chip-row" id="tags">
+        ${['racing thoughts','panicky','numb','tight chest','spiraling','restless'].map(t=>`<div class="chip ${state.preTag===t?'active':''}" data-t="${t}">${t}</div>`).join('')}
+      </div>
+      <button class="primary" id="continueBtn" style="display:none;margin-top:8px;">Continue</button>
+    </div>`;
+  document.getElementById('b').onclick = ()=>go('home');
+  document.querySelectorAll('#tags .chip').forEach(c=>c.onclick=()=>{
+    state.preTag = state.preTag===c.dataset.t ? '' : c.dataset.t;
+    renderPreMood();
+  });
+  let selected = null;
+  document.querySelectorAll('.face-btn').forEach(btn=>btn.onclick=()=>{
+    selected = parseInt(btn.dataset.i);
+    document.querySelectorAll('.face-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('continueBtn').style.display = '';
+  });
+  document.getElementById('continueBtn').onclick = ()=>{
+    if(selected===null) return;
+    state.preMood = selected;
+    go('capture');
+  };
+}
+
+function compressAndStore(file, cb){
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const canvas = document.createElement('canvas');
+      const maxW = 480;
+      const scale = Math.min(1, maxW / img.width);
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      cb(canvas.toDataURL('image/jpeg', 0.55));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderCapture(){
+  const idx = state.currentIdx;
+  const sense = SENSES[idx % SENSES.length];
+  const done = state.photos.length >= state.itemCount;
+  if(done) stopStream();
+
+  app.innerHTML = `
+    <div class="screen">
+      <button class="back" id="b">← back</button>
+      <div class="prompt-hero">
+        <div class="count">${state.photos.length} of ${state.itemCount}</div>
+        <h2>${sense.icon} Find ${sense.label}</h2>
+      </div>
+      ${!done ? `
+        <div class="live-cam" id="liveCam">
+          <video id="camVideo" autoplay playsinline muted></video>
+          <button class="shutter" id="shutterBtn" aria-label="Take photo"></button>
+        </div>
+        <div class="capture-zone" id="zone" style="display:none;">📷<span>tap to open camera</span></div>
+        <input type="file" accept="image/*" capture="environment" id="fileInput" style="display:none">
+      ` : ''}
+      <div class="grid">${state.photos.map(p=>`<div class="tile"><img src="${p.img}"></div>`).join('')}</div>
+      ${done ? `<button class="primary" id="next">I'm done noticing</button>` : ''}
+    </div>`;
+  document.getElementById('b').onclick = ()=>go('pre_mood');
+  if(!done) setupCaptureUI(sense);
+  const next = document.getElementById('next');
+  if(next) next.onclick = ()=>go('post_mood');
+}
+
+async function setupCaptureUI(sense){
+  const liveCam = document.getElementById('liveCam');
+  const video = document.getElementById('camVideo');
+  const shutter = document.getElementById('shutterBtn');
+  const zone = document.getElementById('zone');
+  const fileInput = document.getElementById('fileInput');
+
+  function pushPhoto(dataUrl){
+    state.photos.push({img: dataUrl, prompt: sense.label});
+    state.currentIdx++;
+    renderCapture();
+  }
+
+  function useFallback(){
+    if(liveCam) liveCam.style.display = 'none';
+    zone.style.display = '';
+    zone.innerHTML = `📷<span>tap to open camera</span><span style="display:block;margin-top:4px;font-size:10px;">(one shot at a time — continuous capture needs this hosted on https)</span>`;
+    zone.onclick = ()=> fileInput.click();
+    fileInput.onchange = (e)=>{
+      const f = e.target.files[0];
+      if(!f) return;
+      compressAndStore(f, pushPhoto);
+    };
+  }
+
+  if(!('mediaDevices' in navigator) || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    useFallback(); return;
+  }
+  try{
+    if(!mediaStream){
+      mediaStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}, audio:false});
+    }
+    video.srcObject = mediaStream;
+    shutter.onclick = ()=>{
+      if(!video.videoWidth || !video.videoHeight){ return; } // frame not ready yet, ignore this tap
+      const canvas = document.createElement('canvas');
+      const maxW = 480;
+      const scale = Math.min(1, maxW / video.videoWidth);
+      canvas.width = video.videoWidth * scale;
+      canvas.height = video.videoHeight * scale;
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+      pushPhoto(canvas.toDataURL('image/jpeg', 0.55));
+    };
+  }catch(e){
+    useFallback();
+  }
+}
+
+function renderPostMood(){
+  app.innerHTML = `
+    <div class="screen">
+      <button class="back" id="b">← back</button>
+      <div class="eyebrow">Just now</div>
+      <h1>How does it feel now?</h1>
+      <p class="lede">Same scale.</p>
+      <div class="face-row" id="faces">
+        ${FACES.map((f,i)=>`<button class="face-btn" data-i="${i}">${f}</button>`).join('')}
+      </div>
+      <button class="primary" id="continueBtn" style="display:none;margin-top:8px;">Continue</button>
+    </div>`;
+  document.getElementById('b').onclick = ()=>go('capture');
+  let selected = null;
+  document.querySelectorAll('.face-btn').forEach(btn=>btn.onclick=()=>{
+    selected = parseInt(btn.dataset.i);
+    document.querySelectorAll('.face-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('continueBtn').style.display = '';
+  });
+  document.getElementById('continueBtn').onclick = ()=>{
+    if(selected===null) return;
+    state.postMood = selected;
+    go('note');
+  };
+}
+
+function renderNote(){
+  app.innerHTML = `
+    <div class="screen">
+      <button class="back" id="b">← back</button>
+      <div class="eyebrow">Optional</div>
+      <h1>Anything to remember?</h1>
+      <p class="lede">Totally optional — skip if you'd rather not.</p>
+      <textarea id="note" rows="4" placeholder="A word, a sentence, whatever comes.">${state.note}</textarea>
+      <button class="primary" id="save">Save this session</button>
+      <button class="ghost" id="skip">Skip note & save</button>
+    </div>`;
+  document.getElementById('b').onclick = ()=>go('post_mood');
+  const finish = async ()=>{
+    state.note = document.getElementById('note').value.trim();
+    state.lastSaveOk = await commitSession();
+    go('done');
+  };
+  document.getElementById('save').onclick = finish;
+  document.getElementById('skip').onclick = ()=>{ state.note=''; finish(); };
+}
+
+async function commitSession(){
+  const session = {
+    id: 'session_' + Date.now(),
+    timestamp: new Date().toISOString(),
+    preMood: state.preMood, preTag: state.preTag,
+    postMood: state.postMood,
+    note: state.note,
+    photos: state.photos
+  };
+  const ok = await saveSession(session);
+  const all = await getAllSessions();
+  const today = new Date().toDateString();
+  const todays = all.filter(s=> s.timestamp && new Date(s.timestamp).toDateString()===today);
+  state.todayCount = todays.length;
+  state.todayHeavyCount = todays.filter(s=> s.preMood !== null && s.preMood <= 1).length;
+  return ok;
+}
+
+async function deleteSession(id){
+  try{
+    const db = await openDB();
+    return new Promise((res,rej)=>{
+      const tx = db.transaction(STORE,'readwrite');
+      tx.objectStore(STORE).delete(id);
+      tx.oncomplete = ()=>res(true);
+      tx.onerror = ()=>rej(tx.error);
+    });
+  }catch(e){ return false; }
+}
+
+function buildSummaryCanvas(session){
+  return new Promise((resolve)=>{
+    const canvas = document.createElement('canvas');
+    const W = 720, cols = 3;
+    const photos = session.photos;
+    const rows = Math.ceil(photos.length / cols);
+    const cell = 220;
+    const headerH = 210, footerH = 150;
+    canvas.width = W;
+    canvas.height = headerH + rows*cell + footerH;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ECF0F2'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.font = '40px sans-serif';
+    ctx.fillText('🦦', 24, 50);
+    ctx.fillStyle = '#1F2B33';
+    ctx.font = '600 32px Georgia, serif';
+    ctx.fillText('GROUND', 78, 48);
+    ctx.font = '12px monospace';
+    ctx.fillStyle = '#5A6C76';
+    ctx.fillText('a noticing practice', 78, 66);
+    ctx.font = '13px monospace';
+    ctx.fillStyle = '#5A6C76';
+    ctx.fillText(new Date(session.timestamp).toLocaleString(), 24, 100);
+    ctx.font = '46px sans-serif';
+    ctx.fillText(FACES[session.preMood], 24, 170);
+    ctx.font = '20px sans-serif';
+    ctx.fillStyle = '#5A6C76';
+    ctx.fillText('→', 90, 158);
+    ctx.font = '46px sans-serif';
+    ctx.fillText(FACES[session.postMood], 130, 170);
+    if(session.preTag){
+      ctx.font = '13px monospace'; ctx.fillStyle='#5A6C76';
+      ctx.fillText('felt: ' + session.preTag, 210, 170);
+    }
+    let loaded = 0;
+    if(photos.length === 0) drawFooter();
+    photos.forEach((p, i)=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const x = 24 + (i % cols) * (cell + 12);
+        const y = headerH + Math.floor(i / cols) * (cell + 12);
+        ctx.drawImage(img, x, y, cell, cell);
+        loaded++;
+        if(loaded === photos.length) drawFooter();
+      };
+      img.src = p.img;
+    });
+    function drawFooter(){
+      const y = headerH + rows*cell + 40;
+      ctx.font = '15px sans-serif'; ctx.fillStyle = '#1F2B33';
+      if(session.note){
+        wrapText(ctx, '"' + session.note + '"', 24, y, W-48, 22);
+      }
+      ctx.font = '11px monospace'; ctx.fillStyle = '#8C4A40';
+      ctx.fillText('Personal coping log — not a clinical record.', 24, canvas.height - 20);
+      resolve(canvas.toDataURL('image/jpeg', 0.85));
+    }
+  });
+}
+function wrapText(ctx, text, x, y, maxWidth, lineHeight){
+  const words = text.split(' ');
+  let line = '';
+  for(let n=0; n<words.length; n++){
+    const test = line + words[n] + ' ';
+    if(ctx.measureText(test).width > maxWidth && n > 0){
+      ctx.fillText(line, x, y); line = words[n] + ' '; y += lineHeight;
+    } else { line = test; }
+  }
+  ctx.fillText(line, x, y);
+}
+
+async function whatsappTherapist(session){
+  // A webpage can't attach a file directly into a WhatsApp chat — we save/share
+  // the image first, then open the chat so the user just taps the attach icon once.
+  const dataUrl = await buildSummaryCanvas(session);
+  await shareOrDownload(dataUrl, 'grounding-session.jpg');
+  const text = encodeURIComponent(
+    `Hi ${state.therapistName || ''}, sharing my grounding session from GROUND — mood went ${FACES[session.preMood]} to ${FACES[session.postMood]}.${session.note ? ' Note: "' + session.note + '"' : ''} Attaching the photo now.`
+  );
+  window.open(`https://wa.me/${state.therapistPhone}?text=${text}`, '_blank');
+}
+
+async function shareOrDownload(dataUrl, filename){
+  try{
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
+    const file = new File([blob], filename, {type:'image/jpeg'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file], title:'Grounding session'});
+      return;
+    }
+  }catch(e){ /* fall through to download */ }
+  const a = document.createElement('a');
+  a.href = dataUrl; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+function renderDone(){
+  const delta = state.preMood !== null && state.postMood !== null ? (state.preMood - state.postMood) : 0;
+  let msg;
+  if(state.preMood===null||state.postMood===null) msg = 'Session logged.';
+  else if(delta < 0) msg = "This one felt heavier, and that's real data too — not a failure. Worth mentioning to your psychologist.";
+  else if(delta === 0) msg = "No shift this time, and that's alright. Not every round is meant to.";
+  else msg = "Something shifted.";
+
+  const frequent = state.todayCount >= 4;
+  const severe = state.todayCount >= 2 && state.todayHeavyCount >= 2;
+  const showNudge = frequent || severe;
+  const nudgeText = severe
+    ? `You've had ${state.todayHeavyCount} heavy rounds today. This tool can help in the moment, but a stretch like today is worth telling your psychologist about.`
+    : `You've used this ${state.todayCount} times today. That's okay — and it might also be worth a message to your psychologist about what's making today hard.`;
+
+  const hasTherapist = state.therapistPhone && state.therapistPhone.length > 6;
+
+  app.innerHTML = `
+    <div class="screen" style="text-align:center;">
+      <div class="otter-scene big" id="otterScene">
+        <div class="grass"></div>
+        <div class="otter">🦦</div>
+      </div>
+      <div class="mini-wordmark">GROUND</div>
+      ${state.lastSaveOk ? `<div class="eyebrow">Saved</div>` : `<div class="storage-warn" style="text-align:left;">⚠ This session couldn't be saved to your diary (storage isn't available right now). You can still share it below before it's lost.</div>`}
+      <h1 style="font-size:26px;">${msg}</h1>
+      <div class="mood-compare">
+        <span class="face">${state.preMood!==null?FACES[state.preMood]:'—'}</span>
+        <span class="arrow">→</span>
+        <span class="face">${state.postMood!==null?FACES[state.postMood]:'—'}</span>
+      </div>
+      ${showNudge ? `
+        <div class="notice-card" style="text-align:left;">
+          ${nudgeText}
+          ${hasTherapist ? `<button class="ghost" id="nudgeWa" style="margin-top:10px;">💬 Message ${state.therapistName || 'my therapist'} now</button>` : `<button class="ghost" id="nudgeAdd" style="margin-top:10px;">Add your therapist's number →</button>`}
+        </div>` : ''}
+      <p style="font-size:12px;color:var(--ink-soft);">Check the photo before sending it anywhere — make sure it's just what you meant to share.</p>
+      <button class="primary" id="share">Save / share this session</button>
+      ${hasTherapist ? `<button class="ghost" id="whatsapp">💬 WhatsApp ${state.therapistName || 'my therapist'}</button>` : `<button class="ghost" id="addTherapist">Add your therapist's number →</button>`}
+      <button class="ghost" id="again">Do another round</button>
+      <button class="ghost" id="home">Back to start</button>
+    </div>`;
+  requestAnimationFrame(()=> document.getElementById('otterScene').classList.add('peek'));
+
+  const currentSession = { timestamp: new Date().toISOString(), preMood: state.preMood, postMood: state.postMood, preTag: state.preTag, note: state.note, photos: state.photos };
+
+  document.getElementById('share').onclick = async ()=>{
+    const btn = document.getElementById('share');
+    btn.textContent = 'Preparing…'; btn.disabled = true;
+    const dataUrl = await buildSummaryCanvas(currentSession);
+    await shareOrDownload(dataUrl, 'grounding-session.jpg');
+    btn.textContent = 'Save / share this session'; btn.disabled = false;
+  };
+  const wa = document.getElementById('whatsapp');
+  if(wa) wa.onclick = async ()=>{
+    wa.textContent = 'Preparing…'; wa.disabled = true;
+    await whatsappTherapist(currentSession);
+    wa.textContent = `💬 WhatsApp ${state.therapistName || 'my therapist'}`; wa.disabled = false;
+  };
+  const addT = document.getElementById('addTherapist');
+  if(addT) addT.onclick = ()=>go('settings');
+  const nudgeWa = document.getElementById('nudgeWa');
+  if(nudgeWa) nudgeWa.onclick = async ()=>{
+    nudgeWa.textContent = 'Preparing…'; nudgeWa.disabled = true;
+    await whatsappTherapist(currentSession);
+    nudgeWa.textContent = `💬 Message ${state.therapistName || 'my therapist'} now`; nudgeWa.disabled = false;
+  };
+  const nudgeAdd = document.getElementById('nudgeAdd');
+  if(nudgeAdd) nudgeAdd.onclick = ()=>go('settings');
+
+  document.getElementById('again').onclick = ()=>{
+    state.preMood=null; state.preTag=''; state.postMood=null; state.photos=[]; state.currentIdx=0; state.note='';
+    go('pre_mood');
+  };
+  document.getElementById('home').onclick = ()=>go('home');
+}
+
+async function renderDiary(){
+  app.innerHTML = `<div class="screen"><button class="back" id="b">← back</button><div class="empty">loading…</div></div>`;
+  document.getElementById('b').onclick = ()=>go('home');
+  const all = (await getAllSessions()).filter(s=>!s.test).sort((a,b)=> new Date(b.timestamp)-new Date(a.timestamp));
+
+  app.innerHTML = `
+    <div class="screen">
+      <div class="brand-row"><span class="ico">🦦</span>GROUND</div>
+      <button class="back" id="b">← back</button>
+      <div class="eyebrow">Your diary</div>
+      <h1>Past sessions</h1>
+      <p class="lede">${all.length} logged. Private to this device.</p>
+      ${all.length===0 ? `<div class="empty">Nothing yet — your first round will show up here.</div>` : all.map(s=>{
+        const d = new Date(s.timestamp);
+        return `<div class="entry">
+          <div class="entry-head">
+            <span class="date">${d.toLocaleDateString()} · ${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span>
+            <span>${FACES[s.preMood]} → ${FACES[s.postMood]}</span>
+          </div>
+          <div class="mini-grid">${s.photos.map(p=>`<img src="${p.img}">`).join('')}</div>
+          ${s.note ? `<div class="caption-text">"${s.note}"</div>` : ''}
+          <button class="share-btn-small" data-id="${s.id}">save / share</button>
+          ${state.therapistPhone ? `<button class="share-btn-small" data-wa-id="${s.id}" style="margin-left:8px;">💬 whatsapp</button>` : ''}
+          <button class="share-btn-small" data-del-id="${s.id}" style="margin-left:8px;color:var(--brick);border-color:var(--brick);">delete</button>
+        </div>`;
+      }).join('')}
+    </div>`;
+  document.getElementById('b').onclick = ()=>go('home');
+  document.querySelectorAll('.share-btn-small[data-id]').forEach(btn=>{
+    btn.onclick = async ()=>{
+      const s = all.find(x=>x.id===btn.dataset.id);
+      btn.textContent = 'preparing…';
+      const dataUrl = await buildSummaryCanvas(s);
+      await shareOrDownload(dataUrl, 'grounding-session.jpg');
+      btn.textContent = 'save / share';
+    };
+  });
+  document.querySelectorAll('.share-btn-small[data-wa-id]').forEach(btn=>{
+    btn.onclick = async ()=>{
+      const s = all.find(x=>x.id===btn.dataset.waId);
+      btn.textContent = 'preparing…';
+      await whatsappTherapist(s);
+      btn.textContent = '💬 whatsapp';
+    };
+  });
+  document.querySelectorAll('.share-btn-small[data-del-id]').forEach(btn=>{
+    btn.onclick = async ()=>{
+      if(!confirm('Delete this session? This can\'t be undone.')) return;
+      await deleteSession(btn.dataset.delId);
+      renderDiary();
+    };
+  });
+}
+
+function renderSettings(){
+  app.innerHTML = `
+    <div class="screen">
+      <button class="back" id="b">← back</button>
+      <div class="eyebrow">Settings</div>
+      <h1>How many things?</h1>
+      <p class="lede">This is the default count when you start a round. Change it here, not mid-exercise.</p>
+      <div class="count-row">
+        ${[3,5,7].map(n=>`<div class="count-circle ${state.itemCount==n?'active':''}" data-n="${n}">${n}</div>`).join('')}
+      </div>
+
+      <div class="eyebrow" style="margin-top:22px;">Your psychologist</div>
+      <p class="lede" style="margin-bottom:12px;">Set this once, and a "WhatsApp my therapist" option appears after each session.</p>
+      <label style="display:block;font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);text-transform:uppercase;margin-bottom:6px;">Name</label>
+      <input type="text" id="tName" value="${state.therapistName}" placeholder="e.g. Dr. Sharma" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:#fff;font-family:'Karla',sans-serif;font-size:15px;margin-bottom:12px;">
+      <label style="display:block;font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);text-transform:uppercase;margin-bottom:6px;">WhatsApp number (with country code)</label>
+      <input type="text" id="tPhone" value="${state.therapistPhone}" placeholder="e.g. 91XXXXXXXXXX" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:#fff;font-family:'Karla',sans-serif;font-size:15px;margin-bottom:12px;">
+      <button class="ghost" id="pickContact">📇 Pick from contacts</button>
+      <button class="primary" id="saveContact" style="margin-top:10px;">Save</button>
+      <p id="contactMsg" style="font-size:12px;color:var(--ink-soft);margin-top:8px;"></p>
+
+      <div class="notice-card" style="margin-top:20px;">${storageOK ? 'Storage is working — sessions are saved on this device.' : "This browser isn't letting the app save data right now, so sessions won't be remembered after you close it."}</div>
+      <div class="notice-card">This is a personal coping log, not a clinical or diagnostic tool. It works alongside your care, not instead of it.</div>
+      <div id="cleanupBox"></div>
+    </div>`;
+  document.getElementById('b').onclick = ()=>go('home');
+  loadCleanupBox();
+
+  async function loadCleanupBox(){
+    const all = await getAllSessions();
+    const cutoff = Date.now() - 30*24*60*60*1000;
+    const old = all.filter(s=> s.timestamp && new Date(s.timestamp).getTime() < cutoff);
+    const box = document.getElementById('cleanupBox');
+    if(!box) return;
+    if(old.length === 0){ box.innerHTML=''; return; }
+    box.innerHTML = `<div class="notice-card">You have ${old.length} session${old.length===1?'':'s'} older than 30 days.<button class="ghost" id="clearOld" style="margin-top:10px;">Clear sessions older than 30 days</button></div>`;
+    document.getElementById('clearOld').onclick = async ()=>{
+      if(!confirm(`Delete ${old.length} old session${old.length===1?'':'s'}? This can't be undone.`)) return;
+      for(const s of old) await deleteSession(s.id);
+      loadCleanupBox();
+    };
+  }
+
+  document.getElementById('pickContact').onclick = async ()=>{
+    const msg = document.getElementById('contactMsg');
+    if('contacts' in navigator && 'ContactsManager' in window){
+      try{
+        const contacts = await navigator.contacts.select(['name','tel'], {multiple:false});
+        if(contacts.length){
+          document.getElementById('tName').value = contacts[0].name[0] || '';
+          document.getElementById('tPhone').value = (contacts[0].tel[0] || '').replace(/\D/g,'');
+        }
+      }catch(e){ msg.textContent = "Couldn't open contacts — enter the number manually."; }
+    } else {
+      msg.textContent = "Contact picker isn't supported in this browser — enter the name and number manually instead.";
+    }
+  };
+
+  document.getElementById('saveContact').onclick = async ()=>{
+    state.therapistName = document.getElementById('tName').value.trim();
+    state.therapistPhone = document.getElementById('tPhone').value.trim().replace(/\D/g,'');
+    await setSetting('therapistName', state.therapistName);
+    await setSetting('therapistPhone', state.therapistPhone);
+    document.getElementById('contactMsg').textContent = 'Saved.';
+  };
+
+  document.querySelectorAll('.count-circle').forEach(c=>c.onclick=async ()=>{
+    state.itemCount = parseInt(c.dataset.n);
+    await setSetting('itemCount', state.itemCount);
+    renderSettings();
+  });
+}
+
+boot();
+</script>
+</body>
+</html>
